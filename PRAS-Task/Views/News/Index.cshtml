@@ -1,0 +1,47 @@
+﻿@using PRAS_Task.Data.Models;
+@model IEnumerable<New>;
+
+<button class="btn btn-secondary">
+	<a asp-action ="Index" asp-controller="EngNews">
+Статьи на анлгийском
+</a></button>
+@if(Model.Any()){
+
+    <table class="table table-hover">
+
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col"><a asp-controller="News" asp-action="Index">Title</a></th>
+            <th scope="col"><a asp-controller="News" asp-action="Index">Date</a> </th>
+            <th></th>
+            <th></th>
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr class="table-primary">
+                <td>@item.Id</td>
+                <td>@item.name</td>
+                <td>@item.date</td>
+                <td>
+                    <form method="post" asp-controller="News" asp-action="Delete" asp-route-Newid="@item.Id">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-controller="News" asp-action="UpdateView" asp-route-id="@item.Id">
+                        <button class="btn btn-secondary" type="submit">Edit</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+    
+        <button type="submit" class="btn-success">
+            <a asp-action="CreateView" asp-controller="News" style="text-decoration: none; color:white">Create news</a>
+        </button>
+
+}else{
+    <h3 class="">There are no any news in your data base. Click <a asp-action="CreateView" asp-controller="News">here</a> to create first</h3>
+}
+

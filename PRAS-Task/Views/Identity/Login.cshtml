@@ -1,0 +1,25 @@
+﻿@using PRAS_Task.Models;
+@model LoginModel;
+@{
+
+}
+
+<div class="form">
+    <form class="form-horizontal" asp-action="Login" asp-controller="Identity" >
+        <div class="form-group">
+            <div class="form-group">
+                <label>Email </label>
+                <input type="text" asp-for="Email" class="form-control form-control-sm" />
+            </div>
+            <div class="form-group">
+                <label>Password </label>
+                <input asp-for="Password" class="form-control  form-control-sm" />
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                     <input class="btn btn-success btn-outline-dark" type="submit" value="Save" class="btn btn-success" />
+                 </div>
+            </div>
+            </div>
+    </form>
+</div>

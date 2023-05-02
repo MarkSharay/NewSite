@@ -1,18 +1,15 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PRAS_Task.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using PRAS_Task.Data.Models;
-
+using PRAS_Task.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PRAS_Task.Controllers
 {
-    public class NewsController : Controller
+    public class EngNewsController : Controller
     {
         DataContext _context;
         IWebHostEnvironment _environment;
-        public NewsController(DataContext context, IWebHostEnvironment environment)
+        public EngNewsController(DataContext context, IWebHostEnvironment environment)
         {
             _context = context;
             _environment = environment;
@@ -21,11 +18,12 @@ namespace PRAS_Task.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            var news = _context.News.ToList();
+            var news = _context.EngNews.ToList<EngNew>();
             return View("Index", news);
         }
         [HttpPost]
-        public async Task<ActionResult> Create(New _new) 
+        [Authorize]
+        public async Task<ActionResult> Create(EngNew _new)
         {
 
             var uploadPath = $"{_environment.WebRootPath}/images";
@@ -41,14 +39,14 @@ namespace PRAS_Task.Controllers
                 }
                 _new.picture = files[0].FileName;
                 _new.date = DateTime.Now;
-                _context.News.Add(_new);
+                _context.EngNews.Add(_new);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return BadRequest("Error");
 
         }
-        [ValidateAntiForgeryToken]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult> CreateView()
         {
@@ -56,24 +54,24 @@ namespace PRAS_Task.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Delete(int Newid)
         {
 
-            var data = _context.News.Where(x => x.Id == Newid).FirstOrDefault();
+            var data = _context.EngNews.Where(x => x.Id == Newid).FirstOrDefault();
             if (data != null)
             {
-                _context.News.Remove(data);
+                _context.EngNews.Remove(data);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
                 return BadRequest("Cant delete");
-    }
-        [ValidateAntiForgeryToken]
+        }
+        [Authorize]
         public ActionResult UpdateView(int id)
         {
-            var _new = _context.News.Where(x => x.Id == id).FirstOrDefault();
+            var _new = _context.EngNews.Where(x => x.Id == id).FirstOrDefault();
             if (_new != null)
             {
                 return View("Update", _new);
@@ -82,17 +80,17 @@ namespace PRAS_Task.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(New model)
+        [Authorize]
+        public async Task<ActionResult> Update(EngNew model)
         {
-            var data = _context.News.Where(x => x.Id == model.Id).FirstOrDefault();
+            var data = _context.EngNews.Where(x => x.Id == model.Id).FirstOrDefault();
 
             if (data != null)
             {
                 var files = Request.Form.Files;
                 string filePath = "";
                 string oldPath;
-                if (files.Count>0)
+                if (files.Count > 0)
                 {
                     oldPath = model.picture;
 
@@ -109,7 +107,7 @@ namespace PRAS_Task.Controllers
                     }
 
                 }
-                
+
                 data.text = model.text;
                 data.name = model.name;
                 _context.SaveChanges();
@@ -119,6 +117,5 @@ namespace PRAS_Task.Controllers
                 return BadRequest("Error during processing data");
         }
     }
-
-
 }
+
