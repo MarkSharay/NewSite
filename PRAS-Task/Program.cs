@@ -44,19 +44,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["JWT:Secret"]))
     };
-    //options.Events = new JwtBearerEvents
-    //{
-    //    OnMessageReceived = context =>
-    //    {
-    //        var token = context.Request.Cookies["access_token"];
-    //        if (!string.IsNullOrEmpty(token))
-    //        {
-    //            context.Token = token;
-    //            return Task.CompletedTask;
-    //        }
-    //        return Task.CompletedTask;
-    //    }
-    //};
+
 });
 builder.Services.AddCors(options =>
 {
